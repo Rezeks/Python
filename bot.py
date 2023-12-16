@@ -9,7 +9,6 @@ from Messages_ru import *
 
 Token = '6916931629:AAG0EB9xsAgJ5RLS_S3BErGwIhGQnr3pWJQ'
 bot = telebot.TeleBot(Token)
-
 CHAT_ID = 950968361
 previous_messages = {}
 messages = []
@@ -29,7 +28,6 @@ questions1_kz = {
     'student_group': 'Топты енгізіңіз:',
     'date_lesson': 'Сабақ күнін енгізіңіз:',
     'prichina': 'Сабаққа бармау үшін себепті енгізіңіз:',
-
 }
 questions2 = {
     'Student_name': 'ВВедите ваше ФИО',
@@ -42,7 +40,6 @@ questions2_kz = {
     'Student_group': 'Топты енгізіңіз',
     'student_gender': 'Сіз студент пе, не студентка ма?',
     'Diplom_ruk': 'Дипломды басқарушының атын енгізіңіз',
-
 }
 questions3 = {
     'Student_name': 'Введите ваше ФИО',
@@ -320,10 +317,9 @@ def send_document_abs(chat_id):
 
 def send_start_message(message):
     markup = types.InlineKeyboardMarkup(row_width=2)
-    item1 = types.InlineKeyboardButton("Университет", callback_data='univer')
     item2 = types.InlineKeyboardButton("Колледж", callback_data='college')
     item3 = types.InlineKeyboardButton("Правохранительные органы", callback_data='courts')
-    markup.add(item1, item2, item3)
+    markup.add( item2, item3)
     sent_message = bot.send_message(message.chat.id, "Выберите образец который хотите получить", reply_markup=markup)
     # Сохраняем только текущее сообщение пользователя в списке
     previous_messages[message.chat.id] = [sent_message.message_id]
