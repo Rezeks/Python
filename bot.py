@@ -319,7 +319,7 @@ def send_start_message(message):
     markup = types.InlineKeyboardMarkup(row_width=2)
     item2 = types.InlineKeyboardButton("Колледж", callback_data='college')
     item3 = types.InlineKeyboardButton("Правохранительные органы", callback_data='courts')
-    markup.add( item2, item3)
+    markup.add(item2, item3)
     sent_message = bot.send_message(message.chat.id, "Выберите образец который хотите получить", reply_markup=markup)
     # Сохраняем только текущее сообщение пользователя в списке
     previous_messages[message.chat.id] = [sent_message.message_id]
@@ -329,7 +329,7 @@ def send_start_message_kz(message):
     markup = types.InlineKeyboardMarkup(row_width=2)
     item2 = types.InlineKeyboardButton("Колледж", callback_data='college')
     item3 = types.InlineKeyboardButton("Құқықты қауіпсіздік орталықтар", callback_data='courts')
-    markup.add( item2, item3)
+    markup.add(item2, item3)
     sent_message = bot.send_message(message.chat.id, "Образецті таңдау", reply_markup=markup)
     # Сохраняем только текущее сообщение пользователя в списке
     previous_messages[message.chat.id] = [sent_message.message_id]
@@ -362,6 +362,8 @@ def info(message):
         bot.send_message(message.chat.id, start_kz)
         social_info(message)
         bot.send_message(message.chat.id, 'Бастау үшін Құжаттар деп жазыныз')
+        bot.send_message(message.chat.id, 'Тіл ауыстыру үшін /language деп жазыныз')
+
 
     elif user_language == 'ru':
         user_language[message.chat.id] = 'ru'
@@ -370,6 +372,7 @@ def info(message):
         bot.send_message(message.chat.id, start_ru)
         social_info(message)
         bot.send_message(message.chat.id, 'Для начала напишите Документы')
+        bot.send_message(message.chat.id, 'Для смены языка напишите команду /language')
     else:
         bot.send_message(message.chat.id,
                          'Вы не выбрали язык, пожалуйста выберите язык. Для выбора языка напишите /start и выберите ваш язык')
