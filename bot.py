@@ -391,18 +391,16 @@ def info(message):
         bot.delete_message(message.chat.id, message.message_id)
         bot.send_message(message.chat.id, start_kz)
         social_info(message)
-        bot.send_message(message.chat.id, 'Бастау үшін Құжаттар деп жазыныз')
         bot.send_message(message.chat.id, 'Тіл ауыстыру үшін /language деп жазыныз')
-
-
+        bot.send_message(message.chat.id, 'Бастау үшін Құжаттар деп жазыныз')
     elif user_language == 'ru':
         user_language[message.chat.id] = 'ru'
         bot.send_message(message.chat.id, f"Вы выбрали язык:Русский")
         bot.delete_message(message.chat.id, message.message_id)
         bot.send_message(message.chat.id, start_ru)
         social_info(message)
+        bot.send_message(message.text, 'Для смены языка напишите команду /language')
         bot.send_message(message.chat.id, 'Для начала напишите Документы')
-        bot.send_message(message.chat.id, 'Для смены языка напишите команду /language')
     else:
         bot.send_message(message.chat.id,
                          'Вы не выбрали язык, пожалуйста выберите язык. Для выбора языка напишите /start и выберите ваш язык')
@@ -440,6 +438,7 @@ def handle_callback_query(call):
         bot.delete_message(call.message.chat.id, call.message.message_id)
         bot.send_message(call.message.chat.id, start_kz)
         social_info(call.message)
+        bot.send_message(call.message.chat.id, 'Тіл ауыстыру үшін /language деп жазыныз')
         bot.send_message(call.message.chat.id, 'Бастау үшін Құжаттар деп жазыныз')
 
     elif call.data == 'ru':
@@ -449,6 +448,8 @@ def handle_callback_query(call):
         bot.send_message(call.message.chat.id, start_ru)
         social_info(call.message)
         bot.send_message(call.message.chat.id, 'Для начала напишите Документы')
+        bot.send_message(call.message.chat.id, 'Для смены языка напишите команду /language')
+
 
     if call.data == 'college_button1':
         if user_language == 'ru':
