@@ -89,6 +89,34 @@ questions4 = {
     'Ligot': 'У вас есть льготы?',
 
 }
+questions4_kz = {
+    'Student_name': 'Есімінізді енгізіңіз',
+    'stay_place': 'Тұрмысыңызды енгізіңіз',
+    'country': 'Жататын өлкені енгізіңіз',
+    'Addres_life': 'Тұрмысыңыздың мекенжайын енгізіңіз',
+    'Addres_registration': 'Тіркеу көмегімен мекенжайын енгізіңіз',
+    'School_end': 'Оқу орнын аяқтаган жылды енгізіңіз',
+    'Doc_study': 'Сізде аттестат пен диплом бар ма?',
+    'altyn_belgi': 'Сізде алтын белгісі немесе отличие бар ма?',
+    'Language_otdel': 'Қай тіл бөліміне кіру келгенін енгізіңіз',
+    'inastr_language': 'Қай иелі сауатты оқуды енгізіңіз',
+    'level_of_language': 'Иелі сауатты деңгейі',
+    'rezhim_uchebi': 'Оқу режимін таңдауыңызды енгізіңіз? (күнделікті, қашықтықты)',
+    'stepen_akadem': 'Қай академиялық деңгейге кіру келгенін енгізіңіз',
+    'fakultet': 'Қай факультетке кіру келгенін енгізіңіз',
+    'group_obrazovat_programm': 'Тәлім беру бағдарламасының топтық коды мен атауын енгізіңіз (4 таңбалы код және атау)',
+    'obrazovat_programm': 'Тәлім беру бағдарламасын енгізіңіз',
+    'type_obrazovaniya': 'Тәлімді жаттығу немесе грант бойынша алу келгенін енгізіңіз?',
+    'financirovanie': 'Қаржылау түрін енгізіңіз',
+    'Nomer_certificate': 'ЕНТ немесе КТ сертификатының нөмірін енгізіңіз',
+    'nomer_granta': 'Гранттың нөмірін енгізіңіз (болмаса, - деп жазыңыз)',
+    'obshezhitiya': 'Сізге қолаймыз келетін ба? (жоқ, ия)',
+    'phone': 'Сіздің телефон нөміріңіз',
+    'Father': 'Әке туралы ақпаратты ФИО, телефон, тіркеу мекенжайы форматында енгізіңіз',
+    'Mother': 'Ана туралы ақпаратты ФИО, телефон, тіркеу мекенжайы форматында енгізіңіз',
+    'Ligot': 'Сізде льготалар бар ма?',
+}
+
 
 month_names_ru = {
     'January': 'января',
@@ -557,6 +585,9 @@ def handle_callback_query(call):
         bot.send_message(call.message.chat.id, "Начнем опрос. Ответьте на следующие вопросы:")
         user_data[user_id] = {}
         ask_next_question(call.message, user_id, template_path='Docs/Universet/Заявление.docx', questions=questions4)
-
+    if call.data == 'univer_button1_kz':
+        bot.send_message(call.message.chat.id, "Сауалнаманы бастау. Алдағы сұрауларға жауап беріңіз")
+        user_data[user_id] = {}
+        ask_next_question(call.message, user_id, template_path='Docs/Universet/Заявление_kz.docx', questions=questions4_kz)
 
 bot.polling(none_stop=True, timeout=123)
