@@ -62,8 +62,8 @@ questions3_kz = {
     "prediavlent": 'Кімге көз көрсетілгенді енгізіңіз'
 }
 questions4 = {
-    'Student_name' : 'Введите свое ФИО',
-    'stay_place':'Введите ваще место проживание',
+    'Student_name': 'Введите свое ФИО',
+    'stay_place': 'Введите ваще место проживание',
     'country': 'Введите страну',
     'Addres_life': 'Введите адресс проживания',
     'Addres_registration': 'Введите адресс регистрации',
@@ -344,20 +344,22 @@ def send_document_abs(chat_id):
 
 
 def send_start_message(message):
-    markup = types.InlineKeyboardMarkup(row_width=2)
+    markup = types.InlineKeyboardMarkup(row_width=1)
+    item1 = types.InlineKeyboardButton('АТБ', callback_data='univer')
     item2 = types.InlineKeyboardButton("Колледж", callback_data='college')
     item3 = types.InlineKeyboardButton("Правохранительные органы", callback_data='courts')
-    markup.add(item2, item3)
+    markup.add(item1, item2, item3)
     sent_message = bot.send_message(message.chat.id, "Выберите образец который хотите получить", reply_markup=markup)
     # Сохраняем только текущее сообщение пользователя в списке
     previous_messages[message.chat.id] = [sent_message.message_id]
 
 
 def send_start_message_kz(message):
-    markup = types.InlineKeyboardMarkup(row_width=2)
-    item2 = types.InlineKeyboardButton("Колледж", callback_data='college')
+    markup = types.InlineKeyboardMarkup(row_width=1)
+    item1 = types.InlineKeyboardButton('АТБ', callback_data='univer_kz')
+    item2 = types.InlineKeyboardButton("Колледж", callback_data='college_kz')
     item3 = types.InlineKeyboardButton("Құқықты қауіпсіздік орталықтар", callback_data='courts')
-    markup.add(item2, item3)
+    markup.add(item1, item2, item3)
     sent_message = bot.send_message(message.chat.id, "Образецті таңдау", reply_markup=markup)
     # Сохраняем только текущее сообщение пользователя в списке
     previous_messages[message.chat.id] = [sent_message.message_id]
@@ -480,29 +482,29 @@ def handle_callback_query(call):
             user_data[user_id] = {}
             ask_next_question(call.message, user_id, template_path='PHOTOS/College/СПРАВКА.docx',
                               questions=questions3_kz)
-    if call.data == 'college':
-        if user_language == 'ru':
-            markup1 = types.InlineKeyboardMarkup(row_width=2)
-            item2_1 = types.InlineKeyboardButton("Объяснительная", callback_data='college_button1')
-            item2_2 = types.InlineKeyboardButton("Заявления на дипломного руководителя ",
-                                                 callback_data='college_button2')
-            item2_3 = types.InlineKeyboardButton("Справка", callback_data='college_button3')
-            item2_4 = types.InlineKeyboardButton("Назад", callback_data='college_back_button')
-            markup1.add(item2_1, item2_2, item2_3, item2_4)
-            sent_message = bot.send_message(chat_id=call.message.chat.id, text="Выберите документ",
-                                            reply_markup=markup1)
-            previous_messages[call.message.chat.id] = [sent_message.message_id]
-        else:
-            markup1 = types.InlineKeyboardMarkup(row_width=2)
-            item2_1 = types.InlineKeyboardButton("Түсіндіруші хат", callback_data='college_button1')
-            item2_2 = types.InlineKeyboardButton("Дипломды басқарушыға өтініштер ",
-                                                 callback_data='college_button2')
-            item2_3 = types.InlineKeyboardButton("Сұрау", callback_data='college_button3')
-            item2_4 = types.InlineKeyboardButton("Кері қайту", callback_data='college_back_button')
-            markup1.add(item2_1, item2_2, item2_3, item2_4)
-            sent_message = bot.send_message(chat_id=call.message.chat.id, text="Құжатты таңдау",
-                                            reply_markup=markup1)
-            previous_messages[call.message.chat.id] = [sent_message.message_id]
+    elif call.data == 'college':
+        markup2 = types.InlineKeyboardMarkup(row_width=2)
+        item3_1 = types.InlineKeyboardButton("Объяснительная", callback_data='college_button1')
+        item3_2 = types.InlineKeyboardButton("Заявления на дипломного руководителя ",
+                                             callback_data='college_button2')
+        item3_3 = types.InlineKeyboardButton("Справка", callback_data='college_button3')
+        item3_4 = types.InlineKeyboardButton("Назад", callback_data='college_back_button')
+        markup2.add(item3_1, item3_2, item3_3, item3_4)
+        sent_message = bot.send_message(chat_id=call.message.chat.id, text="Выберите документ",
+                                        reply_markup=markup2)
+        previous_messages[call.message.chat.id] = [sent_message.message_id]
+    elif call.data == 'college_kz':
+        print(user_language)
+        markup1 = types.InlineKeyboardMarkup(row_width=2)
+        item2_1 = types.InlineKeyboardButton("Түсіндіруші хат", callback_data='college_button1')
+        item2_2 = types.InlineKeyboardButton("Дипломды басқарушыға өтініштер ",
+                                             callback_data='college_button2')
+        item2_3 = types.InlineKeyboardButton("Сұрау", callback_data='college_button3')
+        item2_4 = types.InlineKeyboardButton("Кері қайту", callback_data='college_back_button')
+        markup1.add(item2_1, item2_2, item2_3, item2_4)
+        sent_message = bot.send_message(chat_id=call.message.chat.id, text="Құжатты таңдау",
+                                        reply_markup=markup1)
+        previous_messages[call.message.chat.id] = [sent_message.message_id]
     elif call.data == 'college_back_button':
         if user_language == 'kz':
             send_start_message_kz(call.message)
@@ -543,7 +545,24 @@ def handle_callback_query(call):
         send_document_acs(user_id)
     if call.data == 'courts_button3':
         send_document_abs(user_id)
-    # Эта строка запускает бота и начинает прослушивание сообщений
+    if call.data == 'univer_kz':
+        markup1 = types.InlineKeyboardMarkup(row_width=1)
+        item1 = types.InlineKeyboardButton('Сұрау', callback_data='univer_button1_kz')
+        markup1.add(item1)
+        sent_message = bot.send_message(chat_id=call.message.chat.id, text="Құжатты таңдау",
+                                        reply_markup=markup1)
+        previous_messages[call.message.chat.id] = [sent_message.message_id]
+    if call.data == 'univer':
+        markup1 = types.InlineKeyboardMarkup(row_width=1)
+        item1 = types.InlineKeyboardButton('Заявление', callback_data='univer_button1')
+        markup1.add(item1)
+        sent_message = bot.send_message(chat_id=call.message.chat.id, text="Выберите документ",
+                                        reply_markup=markup1)
+        previous_messages[call.message.chat.id] = [sent_message.message_id]
+    if call.data == 'univer_button1':
+        bot.send_message(call.message.chat.id, "Начнем опрос. Ответьте на следующие вопросы:")
+        user_data[user_id] = {}
+        ask_next_question(call.message, user_id, template_path='Docs/Universet/Заявление.docx', questions=questions4)
 
 
 bot.polling(none_stop=True, timeout=123)
