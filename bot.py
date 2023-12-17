@@ -358,7 +358,7 @@ def send_start_message_kz(message):
     markup = types.InlineKeyboardMarkup(row_width=1)
     item1 = types.InlineKeyboardButton('АТБ', callback_data='univer_kz')
     item2 = types.InlineKeyboardButton("Колледж", callback_data='college_kz')
-    item3 = types.InlineKeyboardButton("Құқықты қауіпсіздік орталықтар", callback_data='courts')
+    item3 = types.InlineKeyboardButton("Құқықты қауіпсіздік орталықтар", callback_data='courts_kz')
     markup.add(item1, item2, item3)
     sent_message = bot.send_message(message.chat.id, "Образецті таңдау", reply_markup=markup)
     # Сохраняем только текущее сообщение пользователя в списке
@@ -450,39 +450,36 @@ def handle_callback_query(call):
         bot.send_message(call.message.chat.id, 'Для начала напишите Документы')
         bot.send_message(call.message.chat.id, 'Для смены языка напишите команду /language')
 
-
     if call.data == 'college_button1':
-        if user_language == 'ru':
-            bot.send_message(call.message.chat.id, "Начнем опрос. Ответьте на следующие вопросы:")
-            user_data[user_id] = {}
-            ask_next_question(call.message, user_id, template_path='PHOTOS/College/Обьяснительная.docx',
-                              questions=questions1)
-        else:
-            bot.send_message(call.message.chat.id, "Сауалнаманы бастау. Алдағы сұрауларға жауап беріңіз")
-            user_data[user_id] = {}
-            ask_next_question(call.message, user_id, template_path='PHOTOS/College/Обьяснительная.docx',
-                              questions=questions1_kz)
+
+        bot.send_message(call.message.chat.id, "Начнем опрос. Ответьте на следующие вопросы:")
+        user_data[user_id] = {}
+        ask_next_question(call.message, user_id, template_path='PHOTOS/College/Обьяснительная.docx',
+                          questions=questions1)
+    elif call.data == 'college_button1_kz':
+        bot.send_message(call.message.chat.id, "Сауалнаманы бастау. Алдағы сұрауларға жауап беріңіз")
+        user_data[user_id] = {}
+        ask_next_question(call.message, user_id, template_path='PHOTOS/College/Обьяснительная.docx',
+                          questions=questions1_kz)
     elif call.data == 'college_button2':
-        if user_language == 'ru':
-            bot.send_message(call.message.chat.id, "Начнем опрос. Ответьте на следующие вопросы:")
-            user_data[user_id] = {}
-            ask_next_question(call.message, user_id, template_path='PHOTOS/College/Заявление.docx',
-                              questions=questions2)
-        else:
-            bot.send_message(call.message.chat.id, "Сауалнаманы бастау. Алдағы сұрауларға жауап беріңіз")
-            user_data[user_id] = {}
-            ask_next_question(call.message, user_id, template_path='PHOTOS/College/Заявление.docx',
-                              questions=questions2_kz)
+        bot.send_message(call.message.chat.id, "Начнем опрос. Ответьте на следующие вопросы:")
+        user_data[user_id] = {}
+        ask_next_question(call.message, user_id, template_path='PHOTOS/College/Заявление.docx',
+                          questions=questions2)
+    elif call.data == 'college_button2_kz':
+        bot.send_message(call.message.chat.id, "Сауалнаманы бастау. Алдағы сұрауларға жауап беріңіз")
+        user_data[user_id] = {}
+        ask_next_question(call.message, user_id, template_path='PHOTOS/College/Заявление.docx',
+                          questions=questions2_kz)
     elif call.data == 'college_button3':
-        if user_language == 'ru':
-            bot.send_message(call.message.chat.id, "Начнем опрос. Ответьте на следующие вопросы:")
-            user_data[user_id] = {}
-            ask_next_question(call.message, user_id, template_path='PHOTOS/College/СПРАВКА.docx', questions=questions3)
-        else:
-            bot.send_message(call.message.chat.id, "Сауалнаманы бастау. Алдағы сұрауларға жауап беріңіз")
-            user_data[user_id] = {}
-            ask_next_question(call.message, user_id, template_path='PHOTOS/College/СПРАВКА.docx',
-                              questions=questions3_kz)
+        bot.send_message(call.message.chat.id, "Начнем опрос. Ответьте на следующие вопросы:")
+        user_data[user_id] = {}
+        ask_next_question(call.message, user_id, template_path='PHOTOS/College/СПРАВКА.docx', questions=questions3)
+    elif call.data == 'college_button3_kz':
+        bot.send_message(call.message.chat.id, "Сауалнаманы бастау. Алдағы сұрауларға жауап беріңіз")
+        user_data[user_id] = {}
+        ask_next_question(call.message, user_id, template_path='PHOTOS/College/СПРАВКА.docx',
+                          questions=questions3_kz)
     elif call.data == 'college':
         markup2 = types.InlineKeyboardMarkup(row_width=2)
         item3_1 = types.InlineKeyboardButton("Объяснительная", callback_data='college_button1')
@@ -495,51 +492,47 @@ def handle_callback_query(call):
                                         reply_markup=markup2)
         previous_messages[call.message.chat.id] = [sent_message.message_id]
     elif call.data == 'college_kz':
-        print(user_language)
         markup1 = types.InlineKeyboardMarkup(row_width=2)
-        item2_1 = types.InlineKeyboardButton("Түсіндіруші хат", callback_data='college_button1')
+        item2_1 = types.InlineKeyboardButton("Түсіндіруші хат", callback_data='college_button1_kz')
         item2_2 = types.InlineKeyboardButton("Дипломды басқарушыға өтініштер ",
-                                             callback_data='college_button2')
-        item2_3 = types.InlineKeyboardButton("Сұрау", callback_data='college_button3')
-        item2_4 = types.InlineKeyboardButton("Кері қайту", callback_data='college_back_button')
+                                             callback_data='college_button2_kz')
+        item2_3 = types.InlineKeyboardButton("Сұрау", callback_data='college_button3_kz')
+        item2_4 = types.InlineKeyboardButton("Кері қайту", callback_data='college_back_button_kz')
         markup1.add(item2_1, item2_2, item2_3, item2_4)
         sent_message = bot.send_message(chat_id=call.message.chat.id, text="Құжатты таңдау",
                                         reply_markup=markup1)
         previous_messages[call.message.chat.id] = [sent_message.message_id]
+    elif call.data == 'college_back_button_kz':
+        send_start_message_kz(call.message)
     elif call.data == 'college_back_button':
-        if user_language == 'kz':
-            send_start_message_kz(call.message)
-        else:
-            send_start_message(call.message)
+        send_start_message(call.message)
     if call.data == 'courts':
-        if user_language == 'ru':
-            markup1 = types.InlineKeyboardMarkup(row_width=2)
-            item3_1 = types.InlineKeyboardButton("Признание гражданина недееспособным", callback_data='courts_button1')
-            item3_2 = types.InlineKeyboardButton("О возмещение ущерба дтп", callback_data='courts_button2')
-            item3_3 = types.InlineKeyboardButton("Об установление факта смерти", callback_data='courts_button3')
-            item3_4 = types.InlineKeyboardButton("Назад", callback_data='courts_back_button')
-            markup1.add(item3_1, item3_2, item3_3, item3_4)
-            sent_message = bot.send_message(chat_id=call.message.chat.id, text="Выберите документ",
-                                            reply_markup=markup1)
-            # Сохраняем только текущее сообщение пользователя в списке
-            previous_messages[call.message.chat.id] = [sent_message.message_id]
-        else:
-            markup1 = types.InlineKeyboardMarkup(row_width=2)
-            item3_1 = types.InlineKeyboardButton("Гражданын елестік емес деп тану", callback_data='courts_button1')
-            item3_2 = types.InlineKeyboardButton("Автошаға туынды дамуды компенсациялау",
-                                                 callback_data='courts_button2')
-            item3_3 = types.InlineKeyboardButton("Құжатты таңдау", callback_data='courts_button3')
-            item3_4 = types.InlineKeyboardButton("Кері қайту", callback_data='courts_back_button')
-            markup1.add(item3_1, item3_2, item3_3, item3_4)
-            sent_message = bot.send_message(chat_id=call.message.chat.id, text="Құжатты таңдау",
-                                            reply_markup=markup1)
-            # Сохраняем только текущее сообщение пользователя в списке
-            previous_messages[call.message.chat.id] = [sent_message.message_id]
+        markup1 = types.InlineKeyboardMarkup(row_width=2)
+        item3_1 = types.InlineKeyboardButton("Признание гражданина недееспособным", callback_data='courts_button1')
+        item3_2 = types.InlineKeyboardButton("О возмещение ущерба дтп", callback_data='courts_button2')
+        item3_3 = types.InlineKeyboardButton("Об установление факта смерти", callback_data='courts_button3')
+        item3_4 = types.InlineKeyboardButton("Назад", callback_data='courts_back_button')
+        markup1.add(item3_1, item3_2, item3_3, item3_4)
+        sent_message = bot.send_message(chat_id=call.message.chat.id, text="Выберите документ",
+                                        reply_markup=markup1)
+        # Сохраняем только текущее сообщение пользователя в списке
+        previous_messages[call.message.chat.id] = [sent_message.message_id]
+    elif call.data == 'courts_kz':
+        markup1 = types.InlineKeyboardMarkup(row_width=2)
+        item3_1 = types.InlineKeyboardButton("Гражданын елестік емес деп тану", callback_data='courts_button1')
+        item3_2 = types.InlineKeyboardButton("Автошаға туынды дамуды компенсациялау",
+                                             callback_data='courts_button2')
+        item3_3 = types.InlineKeyboardButton("Құжатты таңдау", callback_data='courts_button3')
+        item3_4 = types.InlineKeyboardButton("Кері қайту", callback_data='courts_back_button_kz')
+        markup1.add(item3_1, item3_2, item3_3, item3_4)
+        sent_message = bot.send_message(chat_id=call.message.chat.id, text="Құжатты таңдау",
+                                        reply_markup=markup1)
+        # Сохраняем только текущее сообщение пользователя в списке
+        previous_messages[call.message.chat.id] = [sent_message.message_id]
+    elif call.data == 'courts_back_button_kz':
+        send_start_message_kz(call.message)
     elif call.data == 'courts_back_button':
-        if user_language == 'kz':
-            send_start_message_kz(call.message)
-        else:
-            send_start_message(call.message)
+        send_start_message(call.message)
     if call.data == 'courts_button1':
         send_document_asc(user_id)
     if call.data == 'courts_button2':
