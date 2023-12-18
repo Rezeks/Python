@@ -6,6 +6,8 @@ import os
 from datetime import datetime
 from Messages_kz import *
 from Messages_ru import *
+from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
+from docx.shared import Pt
 
 Token = '6916931629:AAG0EB9xsAgJ5RLS_S3BErGwIhGQnr3pWJQ'
 bot = telebot.TeleBot(Token)
@@ -163,19 +165,31 @@ def send_error_message(chat_id, error_text):
 def fill_document(template_path, data):
     doc = Document(template_path)
 
+    for paragraph in doc.paragraphs:
+        for run in paragraph.runs:
+            # Установка шрифта Times New Roman
+            run.font.name = 'Calibri'
+            # Установка размера шрифта в 18 пунктов
+            run.font.size = Pt(18)
+
     for key, value in data.items():
         for paragraph in doc.paragraphs:
             if f'{{{key}}}' in paragraph.text:
                 paragraph.text = paragraph.text.replace(f'{{{key}}}', str(value))
+                # Установка размера шрифта в 18 пунктов для замененного текста
+                for run in paragraph.runs:
+                    run.font.size = Pt(18)
         for table in doc.tables:
             for row in table.rows:
                 for cell in row.cells:
                     if f'{{{key}}}' in cell.text:
                         cell.text = cell.text.replace(f'{{{key}}}', str(value))
+                        # Установка размера шрифта в 18 пунктов для замененного текста в ячейке
+                        for paragraph in cell.paragraphs:
+                            for run in paragraph.runs:
+                                run.font.size = Pt(18)
 
     return doc
-
-
 def send_document(chat_id, doc):
     with tempfile.NamedTemporaryFile(delete=False, suffix=".docx") as temp_file:
         temp_file_name = temp_file.name
@@ -322,6 +336,7 @@ def generate_and_send_document(message, user_id, template_path, questions):
             if 'студент' in document_data['student_gender'].lower():
                 user_data[user_id]['student_gender_type'] = 'отсутствовал'
                 user_data[user_id]['Student_gender_Type'] = 'студента'
+
             else:
                 user_data[user_id]['student_gender_type'] = 'отсутствовала'
                 user_data[user_id]['Student_gender_Type'] = 'студентки'
