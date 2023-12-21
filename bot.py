@@ -256,14 +256,14 @@ def process_answer(message, user_id, variable, template_path, questions):
                     if date_obj.year > current_datetime.year or date_obj.year < (current_datetime.year - 1):
                         raise ValueError("Некорректный год")
                     if date_obj.month > 12 or date_obj.day > 31:
-                            raise ValueError("Некорректный месяц или день")
+                        raise ValueError("Некорректный месяц или день")
                     user_data[user_id][variable] = date_obj.strftime('%d.%m.%Y')
                 ask_next_question(message, user_id, template_path, questions)
             except ValueError:
-                    send_error_message(message.chat.id,
-                                       'Некорректные даты. Пожалуйста, введите даты в формате DD.MM.YYYY и убедитесь в правильности значений.')
-                    bot.send_message(message.chat.id, questions[variable])
-                    bot.register_next_step_handler(message, process_answer, user_id=user_id, variable=variable,
+                send_error_message(message.chat.id,
+                                   'Некорректные даты. Пожалуйста, введите даты в формате DD.MM.YYYY и убедитесь в правильности значений.')
+                bot.send_message(message.chat.id, questions[variable])
+                bot.register_next_step_handler(message, process_answer, user_id=user_id, variable=variable,
                                                template_path=template_path, questions=questions)
             if variable == 'date_lesson_kz':
                 current_datetime = datetime.now()
@@ -274,33 +274,33 @@ def process_answer(message, user_id, variable, template_path, questions):
                         end_date = datetime.strptime(end_date_str.strip(), '%d.%m.%Y')
 
                         if start_date.year > current_datetime.year or start_date.year < (current_datetime.year - 1):
-                                raise ValueError("Дұрыс емес жыл")
+                            raise ValueError("Дұрыс емес жыл")
 
                         if start_date.month > 12 or start_date.day > 31:
-                                raise ValueError("Ай немесе күн жарамсыз")
+                            raise ValueError("Ай немесе күн жарамсыз")
 
                         if end_date.year > current_datetime.year or end_date.year < (current_datetime.year - 1):
-                                raise ValueError("Дұрыс емес жыл")
+                            raise ValueError("Дұрыс емес жыл")
                         if end_date.month > 12 or end_date.day > 31:
-                                raise ValueError("Ай немесе күн жарамсыз")
+                            raise ValueError("Ай немесе күн жарамсыз")
                         user_data[user_id][
                             variable] = f"от {start_date.strftime('%d.%m.%Y')} по {end_date.strftime('%d.%m.%Y')}"
                     else:
                         date_obj = datetime.strptime(answer, '%d.%m.%Y')
                         if date_obj.year > current_datetime.year or date_obj.year < (current_datetime.year - 1):
-                                raise ValueError("Дұрыс емес жыл")
+                            raise ValueError("Дұрыс емес жыл")
 
                         if date_obj.month > 12 or date_obj.day > 31:
-                                raise ValueError("Ай немесе күн жарамсыз")
+                            raise ValueError("Ай немесе күн жарамсыз")
                         user_data[user_id][variable] = date_obj.strftime('%d.%m.%Y')
 
                     ask_next_question(message, user_id, template_path, questions)
                 except ValueError:
-                        send_error_message(message.chat.id,
-                                           'Дұрыс емес күндер. Күндерді DD.MM.YYYY форматында енгізіп, мәндердің дұрыстығына көз жеткізіңіз.'
-                                           '')
-                        bot.send_message(message.chat.id, questions[variable])
-                        bot.register_next_step_handler(message, process_answer, user_id=user_id, variable=variable,
+                    send_error_message(message.chat.id,
+                                       'Дұрыс емес күндер. Күндерді DD.MM.YYYY форматында енгізіп, мәндердің дұрыстығына көз жеткізіңіз.'
+                                       '')
+                    bot.send_message(message.chat.id, questions[variable])
+                    bot.register_next_step_handler(message, process_answer, user_id=user_id, variable=variable,
                                                    template_path=template_path, questions=questions)
         else:
             user_data[user_id][variable] = answer
@@ -360,7 +360,7 @@ def send_start_message(message):
     item2 = types.InlineKeyboardButton("Колледж", callback_data='college')
     item3 = types.InlineKeyboardButton("Правохранительные органы", callback_data='courts')
     item4 = types.InlineKeyboardButton('Веб-сайт колледжа', url='https://polytech.kz/')
-    markup.add(item1, item2, item3,item4)
+    markup.add(item1, item2, item3, item4)
     sent_message = bot.send_message(message.chat.id, "Выберите образец который хотите получить", reply_markup=markup)
     previous_messages[message.chat.id] = [sent_message.message_id]
 
@@ -371,7 +371,7 @@ def send_start_message_kz(message):
     item2 = types.InlineKeyboardButton("Колледж", callback_data='college_kz')
     item3 = types.InlineKeyboardButton("Құқықты қауіпсіздік орталықтар", callback_data='courts_kz')
     item4 = types.InlineKeyboardButton('Колледждің веб-сайты', url='https://polytech.kz/')
-    markup.add(item1, item2, item3,item4)
+    markup.add(item1, item2, item3, item4)
     sent_message = bot.send_message(message.chat.id, "Образецті таңдау", reply_markup=markup)
     previous_messages[message.chat.id] = [sent_message.message_id]
 
@@ -393,18 +393,23 @@ def start_message(message):
 def language_pick(message):
     language_set(message)
 
+
 @bot.message_handler(commands=['help'])
 def help(message):
     start = bot.send_message(message.chat.id, 'пожалуйста опишите свою проблему или ошибку')
-    bot.register_next_step_handler(start,bugs_report)
+    bot.register_next_step_handler(start, bugs_report)
+
+
 def bugs_report(message):
     user_id = message.from_user.id
     user_name = message.from_user.username
     current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     message_to_save = message.text
-    bot.send_message(message.chat.id,'Ваш запрос отправлена админу')
+    bot.send_message(message.chat.id, 'Ваш запрос отправлена админу')
     bot.send_message(chat_id=CHAT_ID,
                      text=f"Пользователь {user_id} ({user_name}) отправил вопрос/ошибку:\n\n{message_to_save}\n\nДата: {current_time}")
+
+
 @bot.message_handler(commands=['info'])
 def info(message):
     if user_language == 'kz':
@@ -414,7 +419,8 @@ def info(message):
         bot.send_message(message.chat.id, start_kz)
         social_info(message)
         bot.send_message(message.chat.id, 'Тіл ауыстыру үшін /language деп жазыныз')
-        bot.send_message(message.text, 'Егер сізде қателіктер немесе сұраулар туындаса, /help командасын енгізіп жазыңдарсыз.')
+        bot.send_message(message.text,
+                         'Егер сізде қателіктер немесе сұраулар туындаса, /help командасын енгізіп жазыңдарсыз.')
         bot.send_message(message.chat.id, 'Бастау үшін Құжаттар деп жазыныз')
     elif user_language == 'ru':
         user_language[message.chat.id] = 'ru'
@@ -479,30 +485,40 @@ def handle_callback_query(call):
         user_data[user_id] = {}
         ask_next_question(call.message, user_id, template_path='PHOTOS/College/Обьяснительная.docx',
                           questions=questions1)
+        bot.send_message(call.message.chat.id, 'Для остановки опроса напишите /stop')
+
     elif call.data == 'college_button1_kz':
         bot.send_message(call.message.chat.id, "Сауалнаманы бастау. Алдағы сұрауларға жауап беріңіз")
         user_data[user_id] = {}
         ask_next_question(call.message, user_id, template_path='PHOTOS/College/Обьяснительная_kz.docx',
                           questions=questions1_kz)
+        bot.send_message(call.message.chat.id, 'Тоқтату үшін /stop деп жазыныз')
     elif call.data == 'college_button2':
         bot.send_message(call.message.chat.id, "Начнем опрос. Ответьте на следующие вопросы:")
         user_data[user_id] = {}
         ask_next_question(call.message, user_id, template_path='PHOTOS/College/Заявление.docx',
                           questions=questions2)
+        bot.send_message(call.message.chat.id, 'Для остановки опроса напишите /stop')
+
     elif call.data == 'college_button2_kz':
         bot.send_message(call.message.chat.id, "Сауалнаманы бастау. Алдағы сұрауларға жауап беріңіз")
         user_data[user_id] = {}
         ask_next_question(call.message, user_id, template_path='PHOTOS/College/Заявление_kz.docx',
                           questions=questions2_kz)
+        bot.send_message(call.message.chat.id, 'Тоқтату үшін /stop деп жазыныз')
+
     elif call.data == 'college_button3':
         bot.send_message(call.message.chat.id, "Начнем опрос. Ответьте на следующие вопросы:")
         user_data[user_id] = {}
         ask_next_question(call.message, user_id, template_path='PHOTOS/College/СПРАВКА.docx', questions=questions3)
+        bot.send_message(call.message.chat.id, 'Для остановки опроса напишите /stop')
+
     elif call.data == 'college_button3_kz':
         bot.send_message(call.message.chat.id, "Сауалнаманы бастау. Алдағы сұрауларға жауап беріңіз")
         user_data[user_id] = {}
         ask_next_question(call.message, user_id, template_path='PHOTOS/College/СПРАВКА.docx',
                           questions=questions3_kz)
+        bot.send_message(call.message.chat.id, 'Тоқтату үшін /stop деп жазыныз')
     elif call.data == 'college':
         markup2 = types.InlineKeyboardMarkup(row_width=2)
         item3_1 = types.InlineKeyboardButton("Объяснительная", callback_data='college_button1')
@@ -576,6 +592,7 @@ def handle_callback_query(call):
         previous_messages[call.message.chat.id] = [sent_message.message_id]
     if call.data == 'univer_button1':
         bot.send_message(call.message.chat.id, "Начнем опрос. Ответьте на следующие вопросы:")
+        bot.send_message(call.message.chat.id, 'Для остановки опроса напишите /stop')
         user_data[user_id] = {}
         ask_next_question(call.message, user_id, template_path='Docs/Universet/Заявление.docx', questions=questions4)
     if call.data == 'univer_button1_kz':
