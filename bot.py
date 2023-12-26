@@ -589,7 +589,7 @@ def handle_callback_query(call):
         send_document_abs(user_id)
     if call.data == 'univer_kz':
         markup1 = types.InlineKeyboardMarkup(row_width=1)
-        item1 = types.InlineKeyboardButton('Сұрау', callback_data='univer_button1_kz')
+        item1 = types.InlineKeyboardButton('Өтініш', callback_data='univer_button1_kz')
         markup1.add(item1)
         sent_message = bot.send_message(chat_id=call.message.chat.id, text="Құжатты таңдау",
                                         reply_markup=markup1)
