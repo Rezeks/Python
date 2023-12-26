@@ -1,13 +1,15 @@
-import telebot
-from telebot import types
-from docx import Document
-import tempfile
+import calendar
 import os
+import tempfile
 from datetime import datetime
+
+import telebot
+from docx import Document
+from docx.shared import Pt
+from telebot import types
+
 from Messages_kz import *
 from Messages_ru import *
-from docx.shared import Pt
-import calendar
 
 Token = '6916931629:AAG0EB9xsAgJ5RLS_S3BErGwIhGQnr3pWJQ'
 bot = telebot.TeleBot(Token)
@@ -44,18 +46,18 @@ questions2_kz = {
 questions3 = {
     'Student_name': 'Введите ваше ФИО',
     "nu": 'Введите номер приказа',
-    "day": 'Введите день приказа',
-    "mont": 'Введите месяц приказа',
-    "year": 'Введите год прикаха',
+    "day": 'Введите день приказа(в цифровом формате)',
+    "month": 'Введите месяц приказа(в именном формате)',
+    "year": 'Введите год приказа(полный год)',
     "course": 'Введите курс',
-    "student_group": 'Введите группу студента',
+    "student_group": 'Введите группу студента(пример:п-21-56б)',
     "prediavlent": 'Введите кому предьявляется'
 }
 questions3_kz = {
     'Student_name': 'Аты-жөніңізді енгізіңіз',
     "nu": 'Приказ нөмірін енгізіңіз',
     "day": 'Приказ күнін енгізіңіз',
-    "mont": 'Приказ айын енгізіңіз',
+    "month": 'Приказ айын енгізіңіз',
     "year": 'Приказ жылын енгізіңіз',
     "course": 'Курсты енгізіңіз',
     "student_group": 'Студентті топты енгізіңіз',
@@ -378,7 +380,7 @@ def send_start_message_kz(message):
 
 def language_set(message):
     language_markup = types.InlineKeyboardMarkup(row_width=3)
-    item1 = types.InlineKeyboardButton("kz Казахский", callback_data='kz')
+    item1 = types.InlineKeyboardButton("kz Қазақша", callback_data='kz')
     item2 = types.InlineKeyboardButton("ru Русский", callback_data='ru')
     language_markup.add(item1, item2)
     sent_message = bot.send_message(message.chat.id, "Выберите язык", reply_markup=language_markup)
@@ -405,31 +407,39 @@ def bugs_report(message):
     user_name = message.from_user.username
     current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     message_to_save = message.text
-    bot.send_message(message.chat.id, 'Ваш запрос отправлена админу')
+    bot.send_message(message.chat.id, 'Ваш запрос отправлен админу')
     bot.send_message(chat_id=CHAT_ID,
                      text=f"Пользователь {user_id} ({user_name}) отправил вопрос/ошибку:\n\n{message_to_save}\n\nДата: {current_time}")
 
 
+
 @bot.message_handler(commands=['info'])
 def info(message):
-    if user_language == 'kz':
+    chat_id = message.chat.id
+
+    if chat_id in user_language:
+        language = user_language[chat_id]
+    else:
+        language = 'ru'
+        user_language[chat_id] = language
+
+    if language == 'kz':
         user_language[message.chat.id] = 'kz'
-        bot.send_message(message.chat.id, f"Сіз тілді таңдағаныз:Казахский")
+        bot.send_message(message.chat.id, f"Сіз тілді таңдағаныз:Қазақша")
         bot.delete_message(message.chat.id, message.message_id)
         bot.send_message(message.chat.id, start_kz)
         social_info(message)
         bot.send_message(message.chat.id, 'Тіл ауыстыру үшін /language деп жазыныз')
-        bot.send_message(message.text,
-                         'Егер сізде қателіктер немесе сұраулар туындаса, /help командасын енгізіп жазыңдарсыз.')
+        bot.send_message(message.chat.id,'Егер сізде қателіктер туындаса немесе сұраулар, ботты жақсарту үшін ұсыныстарыңыз болса, /help командасын қолданыңыз.')
         bot.send_message(message.chat.id, 'Бастау үшін Құжаттар деп жазыныз')
-    elif user_language == 'ru':
+    elif language == 'ru':
         user_language[message.chat.id] = 'ru'
         bot.send_message(message.chat.id, f"Вы выбрали язык:Русский")
         bot.delete_message(message.chat.id, message.message_id)
         bot.send_message(message.chat.id, start_ru)
         social_info(message)
-        bot.send_message(message.text, 'Для смены языка напишите команду /language')
-        bot.send_message(message.text, 'Если у вас возникли ошибки или вопросы, напишите команду /help')
+        bot.send_message(message.chat.id, 'Для смены языка напишите команду /language')
+        bot.send_message(message.chat.id, 'Если у вас возникли ошибки,вопросы или предложение по улучшению бота, напишите команду /help')
         bot.send_message(message.chat.id, 'Для начала напишите Документы')
     else:
         bot.send_message(message.chat.id,
@@ -464,11 +474,12 @@ def handle_callback_query(call):
 
     if call.data == 'kz':
         user_language[call.message.chat.id] = 'kz'
-        bot.send_message(call.message.chat.id, f"Сіз тілді таңдағаныз:Казахский")
+        bot.send_message(call.message.chat.id, f"Сіз тілді таңдағаныз:Қазақша")
         bot.delete_message(call.message.chat.id, call.message.message_id)
         bot.send_message(call.message.chat.id, start_kz)
         social_info(call.message)
         bot.send_message(call.message.chat.id, 'Тіл ауыстыру үшін /language деп жазыныз')
+        bot.send_message(call.message.chat.id,'Егер сізде қателіктер туындаса немесе сұраулар, ботты жақсарту үшін ұсыныстарыңыз болса, /help командасын қолданыңыз.')
         bot.send_message(call.message.chat.id, 'Бастау үшін Құжаттар деп жазыныз')
     elif call.data == 'ru':
         user_language[call.message.chat.id] = 'ru'
@@ -476,49 +487,49 @@ def handle_callback_query(call):
         bot.delete_message(call.message.chat.id, call.message.message_id)
         bot.send_message(call.message.chat.id, start_ru)
         social_info(call.message)
-        bot.send_message(call.message.chat.id, 'Для начала напишите Документы')
         bot.send_message(call.message.chat.id, 'Для смены языка напишите команду /language')
-
+        bot.send_message(call.message.chat.id, 'Если у вас возникли ошибки,вопросы или предложение по улучшению бота, напишите команду /help')
+        bot.send_message(call.message.chat.id, 'Для начала напишите Документы')
     if call.data == 'college_button1':
 
         bot.send_message(call.message.chat.id, "Начнем опрос. Ответьте на следующие вопросы:")
+        bot.send_message(call.message.chat.id, 'Для остановки опроса напишите /stop')
         user_data[user_id] = {}
         ask_next_question(call.message, user_id, template_path='PHOTOS/College/Обьяснительная.docx',
                           questions=questions1)
-        bot.send_message(call.message.chat.id, 'Для остановки опроса напишите /stop')
 
     elif call.data == 'college_button1_kz':
         bot.send_message(call.message.chat.id, "Сауалнаманы бастау. Алдағы сұрауларға жауап беріңіз")
+        bot.send_message(call.message.chat.id, 'Тоқтату үшін /stop деп жазыныз')
         user_data[user_id] = {}
         ask_next_question(call.message, user_id, template_path='PHOTOS/College/Обьяснительная_kz.docx',
                           questions=questions1_kz)
-        bot.send_message(call.message.chat.id, 'Тоқтату үшін /stop деп жазыныз')
     elif call.data == 'college_button2':
         bot.send_message(call.message.chat.id, "Начнем опрос. Ответьте на следующие вопросы:")
+        bot.send_message(call.message.chat.id, 'Для остановки опроса напишите /stop')
         user_data[user_id] = {}
         ask_next_question(call.message, user_id, template_path='PHOTOS/College/Заявление.docx',
                           questions=questions2)
-        bot.send_message(call.message.chat.id, 'Для остановки опроса напишите /stop')
 
     elif call.data == 'college_button2_kz':
         bot.send_message(call.message.chat.id, "Сауалнаманы бастау. Алдағы сұрауларға жауап беріңіз")
+        bot.send_message(call.message.chat.id, 'Тоқтату үшін /stop деп жазыныз')
         user_data[user_id] = {}
         ask_next_question(call.message, user_id, template_path='PHOTOS/College/Заявление_kz.docx',
                           questions=questions2_kz)
-        bot.send_message(call.message.chat.id, 'Тоқтату үшін /stop деп жазыныз')
 
     elif call.data == 'college_button3':
         bot.send_message(call.message.chat.id, "Начнем опрос. Ответьте на следующие вопросы:")
+        bot.send_message(call.message.chat.id, 'Для остановки опроса напишите /stop')
         user_data[user_id] = {}
         ask_next_question(call.message, user_id, template_path='PHOTOS/College/СПРАВКА.docx', questions=questions3)
-        bot.send_message(call.message.chat.id, 'Для остановки опроса напишите /stop')
 
     elif call.data == 'college_button3_kz':
         bot.send_message(call.message.chat.id, "Сауалнаманы бастау. Алдағы сұрауларға жауап беріңіз")
+        bot.send_message(call.message.chat.id, 'Тоқтату үшін /stop деп жазыныз')
         user_data[user_id] = {}
         ask_next_question(call.message, user_id, template_path='PHOTOS/College/СПРАВКА.docx',
                           questions=questions3_kz)
-        bot.send_message(call.message.chat.id, 'Тоқтату үшін /stop деп жазыныз')
     elif call.data == 'college':
         markup2 = types.InlineKeyboardMarkup(row_width=2)
         item3_1 = types.InlineKeyboardButton("Объяснительная", callback_data='college_button1')
