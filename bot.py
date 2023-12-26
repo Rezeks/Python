@@ -531,7 +531,7 @@ def handle_callback_query(call):
         ask_next_question(call.message, user_id, template_path='PHOTOS/College/СПРАВКА.docx',
                           questions=questions3_kz)
     elif call.data == 'college':
-        markup2 = types.InlineKeyboardMarkup(row_width=2)
+        markup2 = types.InlineKeyboardMarkup(row_width=1)
         item3_1 = types.InlineKeyboardButton("Объяснительная", callback_data='college_button1')
         item3_2 = types.InlineKeyboardButton("Заявления на дипломного руководителя ",
                                              callback_data='college_button2')
@@ -542,7 +542,7 @@ def handle_callback_query(call):
                                         reply_markup=markup2)
         previous_messages[call.message.chat.id] = [sent_message.message_id]
     elif call.data == 'college_kz':
-        markup1 = types.InlineKeyboardMarkup(row_width=2)
+        markup1 = types.InlineKeyboardMarkup(row_width=1)
         item2_1 = types.InlineKeyboardButton("Түсіндіруші хат", callback_data='college_button1_kz')
         item2_2 = types.InlineKeyboardButton("Дипломды басқарушыға өтініштер ",
                                              callback_data='college_button2_kz')
@@ -557,7 +557,7 @@ def handle_callback_query(call):
     elif call.data == 'college_back_button':
         send_start_message(call.message)
     if call.data == 'courts':
-        markup1 = types.InlineKeyboardMarkup(row_width=2)
+        markup1 = types.InlineKeyboardMarkup(row_width=1)
         item3_1 = types.InlineKeyboardButton("Признание гражданина недееспособным", callback_data='courts_button1')
         item3_2 = types.InlineKeyboardButton("О возмещение ущерба дтп", callback_data='courts_button2')
         item3_3 = types.InlineKeyboardButton("Об установление факта смерти", callback_data='courts_button3')
@@ -567,7 +567,7 @@ def handle_callback_query(call):
                                         reply_markup=markup1)
         previous_messages[call.message.chat.id] = [sent_message.message_id]
     elif call.data == 'courts_kz':
-        markup1 = types.InlineKeyboardMarkup(row_width=2)
+        markup1 = types.InlineKeyboardMarkup(row_width=1)
         item3_1 = types.InlineKeyboardButton("Гражданын елестік емес деп тану", callback_data='courts_button1')
         item3_2 = types.InlineKeyboardButton("Автошаға туынды дамуды компенсациялау",
                                              callback_data='courts_button2')
